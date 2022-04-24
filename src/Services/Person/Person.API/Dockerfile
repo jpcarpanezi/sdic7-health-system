@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["UnifiedHealthSystem/UnifiedHealthSystem.csproj", "UnifiedHealthSystem/"]
-RUN dotnet restore "UnifiedHealthSystem/UnifiedHealthSystem.csproj"
+COPY ["src/Services/Person/Person.API/Person.API.csproj", "src/Services/Person/Person.API/"]
+RUN dotnet restore "src/Services/Person/Person.API/Person.API.csproj"
 COPY . .
-WORKDIR "/src/UnifiedHealthSystem"
-RUN dotnet build "UnifiedHealthSystem.csproj" -c Release -o /app/build
+WORKDIR "/src/src/Services/Person/Person.API"
+RUN dotnet build "Person.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "UnifiedHealthSystem.csproj" -c Release -o /app/publish
+RUN dotnet publish "Person.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "UnifiedHealthSystem.dll"]
+ENTRYPOINT ["dotnet", "Person.API.dll"]

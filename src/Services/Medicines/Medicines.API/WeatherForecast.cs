@@ -1,4 +1,4 @@
-namespace UnifiedHealthSystem {
+namespace Medicines.API {
 	public class WeatherForecast {
 		public DateTime Date { get; set; }
 

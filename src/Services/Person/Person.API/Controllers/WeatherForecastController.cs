@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace UnifiedHealthSystem.Controllers {
+namespace Person.API.Controllers {
 	[ApiController]
 	[Route("[controller]")]
 	public class WeatherForecastController : ControllerBase {
