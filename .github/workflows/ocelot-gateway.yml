@@ -35,4 +35,4 @@ jobs:
           push: true
           tags: jpcarpanezi/health-system-ocelot:dev
           file: src/ApiGateway/Gateway.Ocelot/Dockerfile
-          context: src/
+          context: ./
