@@ -34,6 +34,6 @@ jobs:
         uses: docker/build-push-action@v2.7.0
         with:
           push: true
-          tags: health-system-person:dev
+          tags: ${{ secrets.REGISTRY_URL }}/sdic7/person:dev
           file: src/Services/Person/Person.API/Dockerfile
           context: ./
