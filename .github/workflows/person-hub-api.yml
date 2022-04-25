@@ -1,0 +1,39 @@
+name: Person-Hub.API
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - src/BuildingBlocks/**
+      - src/Services/Person/Person.API
+      - .github/workflows/person-hub-api.yml
+    
+  pull_request:
+    branches: [ master ]
+    paths:
+      - src/BuildingBlocks/**
+      - src/Services/Person/Person.API
+      - .github/workflows/person-hub-api.yml
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_LOGIN }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2.7.0
+        with:
+          push: true
+          tags: jpcarpanezi/health-system-person:dev
+          file: src/Services/Person/Person.API/Dockerfile
+          context: ./
