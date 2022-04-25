@@ -1,4 +1,4 @@
-name: Person-Hub.API
+name: Person.API
 
 on:
   push:
