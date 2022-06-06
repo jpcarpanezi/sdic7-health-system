@@ -23,8 +23,9 @@ namespace Person.API.Models.Entities {
 		[Column("miObservations", TypeName = "text")]
 		public string Observations { get; set; }
 
-		[ForeignKey("PersonUUID")]
-		[InverseProperty("MedicalInformation")]
+
+		[ForeignKey(nameof(PersonUUID))]
+		[InverseProperty(nameof(Entities.Person.MedicalInformation))]
 		public virtual Person Person { get; set; }
 	}
 }

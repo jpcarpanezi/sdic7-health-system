@@ -31,8 +31,8 @@ namespace Person.API.Models.Entities {
 		[StringLength(16)]
 		public string Phone { get; set; }
 
-		[Column("pBirthDate")]
-		public DateOnly BirthDate { get; set; }
+		[Column("pBirthDate", TypeName = "date")]
+		public DateTime BirthDate { get; set; }
 
 		[Required]
 		[Column("pEmail")]
@@ -44,11 +44,14 @@ namespace Person.API.Models.Entities {
 		[StringLength(100)]
 		public string BirthCity { get; set; }
 
-		[InverseProperty("PersonUUID")]
+
+		[InverseProperty("PUu")]
 		public virtual MedicalInformation MedicalInformation { get; set; }
-		[InverseProperty("PersonUUID")]
+
+		[InverseProperty(nameof(Address.Person))]
 		public virtual ICollection<Address> Addresses { get; set; }
-		[InverseProperty("PersonUUID")]
+
+		[InverseProperty(nameof(EmergencyContact.Person))]
 		public virtual ICollection<EmergencyContact> EmergencyContacts { get; set; }
 	}
 }

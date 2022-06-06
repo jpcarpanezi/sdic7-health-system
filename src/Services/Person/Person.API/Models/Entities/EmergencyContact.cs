@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Person.API.Models.Entities {
-	[Index("PersonUUID", Name = "fk_EmergencyContacts_Person")]
+	[Index(nameof(PersonUUID), Name = "fk_EmergencyContacts_Person")]
 	public partial class EmergencyContact {
 		[Key]
 		[Column("ecUUID")]
@@ -29,8 +29,9 @@ namespace Person.API.Models.Entities {
 		[StringLength(255)]
 		public string Kinship { get; set; }
 
-		[ForeignKey("PersonUUID")]
-		[InverseProperty("EmergencyContacts")]
+
+		[ForeignKey(nameof(PersonUUID))]
+		[InverseProperty(nameof(Entities.Person.EmergencyContacts))]
 		public virtual Person Person { get; set; }
 	}
 }

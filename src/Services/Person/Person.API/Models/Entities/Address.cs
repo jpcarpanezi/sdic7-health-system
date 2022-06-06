@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Person.API.Models.Entities {
 	[Table("Address")]
-	[Index("PersonUUID", Name = "fk_Address_Person")]
+	[Index(nameof(PersonUUID), Name = "fk_Address_Person")]
 	public partial class Address {
 		[Key]
 		[Column("aUUID")]
@@ -38,8 +38,9 @@ namespace Person.API.Models.Entities {
 		[StringLength(20)]
 		public string ZipCode { get; set; }
 
-		[ForeignKey("PersonUUID")]
-		[InverseProperty("Addresses")]
+
+		[ForeignKey(nameof(PersonUUID))]
+		[InverseProperty(nameof(Entities.Person.Addresses))]
 		public virtual Person Person { get; set; }
 	}
 }

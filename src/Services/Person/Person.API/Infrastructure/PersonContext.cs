@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Person.API.Models.Entities;
@@ -19,8 +18,8 @@ namespace Person.API.Infrastructure {
 		public virtual DbSet<Models.Entities.Person> People { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
-			modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
-				.HasCharSet("utf8mb4");
+			modelBuilder.HasCharSet("utf8mb4")
+				.UseCollation("utf8mb4_0900_ai_ci");
 
 			modelBuilder.Entity<Address>(entity => {
 				entity.HasKey(e => e.UUID)
@@ -54,8 +53,8 @@ namespace Person.API.Infrastructure {
 					.HasConstraintName("fk_MedicalInformations_Person");
 			});
 
-			modelBuilder.Entity<Models.Entities.Person>(entity => {
-				entity.HasKey(e => e.UUID)
+			modelBuilder.Entity<Person>(entity => {
+				entity.HasKey(e => e.PUuid)
 					.HasName("PRIMARY");
 			});
 
