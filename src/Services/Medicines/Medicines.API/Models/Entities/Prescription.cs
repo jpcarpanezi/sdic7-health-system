@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace Medicines.API.Models.Entities {
 	[Index(nameof(MedicalConsultationUUID), Name = "fk_Prescriptions_MedicalConsultation")]

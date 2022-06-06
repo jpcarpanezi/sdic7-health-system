@@ -45,7 +45,7 @@ namespace Person.API.Models.Entities {
 		public string BirthCity { get; set; }
 
 
-		[InverseProperty("PUu")]
+		[InverseProperty(nameof(Entities.MedicalInformation.Person))]
 		public virtual MedicalInformation MedicalInformation { get; set; }
 
 		[InverseProperty(nameof(Address.Person))]

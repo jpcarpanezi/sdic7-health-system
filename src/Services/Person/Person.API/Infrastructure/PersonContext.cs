@@ -54,7 +54,7 @@ namespace Person.API.Infrastructure {
 			});
 
 			modelBuilder.Entity<Models.Entities.Person>(entity => {
-				entity.HasKey(e => e.PUuid)
+				entity.HasKey(e => e.UUID)
 					.HasName("PRIMARY");
 			});
 
