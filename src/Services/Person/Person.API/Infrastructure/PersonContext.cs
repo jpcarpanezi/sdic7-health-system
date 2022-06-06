@@ -53,7 +53,7 @@ namespace Person.API.Infrastructure {
 					.HasConstraintName("fk_MedicalInformations_Person");
 			});
 
-			modelBuilder.Entity<Person>(entity => {
+			modelBuilder.Entity<Models.Entities.Person>(entity => {
 				entity.HasKey(e => e.PUuid)
 					.HasName("PRIMARY");
 			});
