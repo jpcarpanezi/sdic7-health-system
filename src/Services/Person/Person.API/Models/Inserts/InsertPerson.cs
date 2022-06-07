@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Person.API.Models.Inserts {
+﻿namespace Person.API.Models.Inserts {
 	public record InsertPerson {
 		[Required(AllowEmptyStrings = false)]
 		[MaxLength(255)]

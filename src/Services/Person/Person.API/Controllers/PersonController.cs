@@ -1,8 +1,4 @@
-﻿using Person.API.Models.Inserts;
-using Person.API.Models.Queries;
-using Person.API.Models.Updates;
-using Person.API.Models.Views;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
 namespace Person.API.Controllers {

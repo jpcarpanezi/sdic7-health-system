@@ -2,6 +2,10 @@ global using Person.API.Infrastructure;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using System.ComponentModel.DataAnnotations;
+global using Person.API.Models.Inserts;
+global using Person.API.Models.Queries;
+global using Person.API.Models.Updates;
+global using Person.API.Models.Views;
 
 var builder = WebApplication.CreateBuilder(args);
 

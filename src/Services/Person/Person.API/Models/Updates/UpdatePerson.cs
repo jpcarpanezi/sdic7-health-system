@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Person.API.Models.Updates {
+﻿namespace Person.API.Models.Updates {
 	public record UpdatePerson {
 		[Required]
 		public Guid UUID { get; set; }
