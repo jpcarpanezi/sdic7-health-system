@@ -12,6 +12,7 @@ namespace Person.API.Models.Entities {
 		[Column("aUUID")]
 		public Guid UUID { get; set; }
 
+		[Required]
 		[Column("pUUID")]
 		public Guid PersonUUID { get; set; }
 
@@ -34,6 +35,7 @@ namespace Person.API.Models.Entities {
 		[StringLength(64)]
 		public string State { get; set; }
 
+		[Required]
 		[Column("aZipCode")]
 		[StringLength(20)]
 		public string ZipCode { get; set; }
