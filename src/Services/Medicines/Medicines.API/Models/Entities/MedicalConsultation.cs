@@ -16,7 +16,7 @@ namespace Medicines.API.Models.Entities {
 		public Guid UUID { get; set; }
 
 		[Column("pUUID")]
-		public Guid PrescriptionUUID { get; set; }
+		public Guid PersonUUID { get; set; }
 
 		[Column("mcDateTime", TypeName = "timestamp")]
 		public DateTime DateTime { get; set; }
