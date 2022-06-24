@@ -4,7 +4,12 @@ global using Microsoft.EntityFrameworkCore;
 global using BuildingBlocks.EventBus.Events;
 global using BuildingBlocks.EventBus.Abstractions;
 global using Medicines.API.IntegrationEvents.Events;
-using Autofac;
+global using System.ComponentModel.DataAnnotations;
+global using Medicines.API.Models.Inserts;
+global using Medicines.API.Models.Entities;
+global using Medicines.API.Models.Queries;
+global using Medicines.API.Models.Views;
+global using Medicines.API.Models.Updates;
 using Autofac.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
