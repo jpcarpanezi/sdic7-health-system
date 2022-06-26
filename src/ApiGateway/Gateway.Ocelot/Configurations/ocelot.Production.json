@@ -3,12 +3,7 @@
     {
       "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "person",
-          "Port": 80
-        }
-      ],
+      "ServiceName": "person",
       "UpstreamPathTemplate": "/person/{everything}",
       "UpstreamHeaderTransform": {
         "X-Forwarded-For": "{RemoteIpAddress}"
@@ -19,12 +14,7 @@
     {
       "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "medicines",
-          "Port": 80
-        }
-      ],
+      "ServiceName": "medicines",
       "UpstreamPathTemplate": "/medicines/{everything}",
       "UpstreamHeaderTransform": {
         "X-Forwarded-For": "{RemoteIpAddress}"
