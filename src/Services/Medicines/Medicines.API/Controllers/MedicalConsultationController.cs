@@ -70,5 +70,11 @@
 
 			return Ok(new MedicalConsultationView(consultation));
 		}
+
+		[HttpGet]
+		[Route("ping")]
+		public IActionResult Ping() {
+			return Ok("Pong");
+		}
 	}
 }
