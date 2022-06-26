@@ -2,13 +2,8 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "person",
-          "Port": 80
-        }
-      ],
+      "DownstreamScheme": "http",
+      "ServiceName": "person",
       "UpstreamPathTemplate": "/person/{everything}",
       "UpstreamHeaderTransform": {
         "X-Forwarded-For": "{RemoteIpAddress}"
@@ -18,13 +13,8 @@
     },
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "medicines",
-          "Port": 80
-        }
-      ],
+      "DownstreamScheme": "http",
+      "ServiceName": "medicines",
       "UpstreamPathTemplate": "/medicines/{everything}",
       "UpstreamHeaderTransform": {
         "X-Forwarded-For": "{RemoteIpAddress}"
@@ -32,5 +22,11 @@
       "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PATCH", "PUT" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Namespace": "propnull",
+      "Type": "KubernetesServiceDiscoveryProvider"
+    }
+  }
 }
