@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.14-management
+    container_name: rabbitmq
+    restart: always 
+    environment:
+      RABBITMQ_DEFAULT_USER: "root"
+      RABBITMQ_DEFAULT_PASS: "password"
+      RABBITMQ_NODENAME: "node@rabbitmq"
+    volumes:
+      - /opt/sdic7-data/rabbitmq/data/:/var/lib/rabbitmq
+      - /opt/sdic7-data/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - system
+      
+  mysql:
+    image: mysql:8.0.26
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+    volumes:
+      - /opt/sdic7-data/mysql/:/var/lib/mysql
+      - ../databases/health-medicines.sql:/docker-entrypoint-initdb.d/health-medicines.sql
+    networks:
+      - system
+    restart: always
+    container_name: mysql-medicines
+    
+  mysql:
+    image: mysql:8.0.26
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+    volumes:
+      - /opt/sdic7-data/mysql/:/var/lib/mysql
+      - ../databases/health-person.sql:/docker-entrypoint-initdb.d/health-person.sql
+    networks:
+      - system
+    restart: always
+    container_name: mysql-person
+    
+  medicines:
+    image: jpcarpanezi/health-system-medicines:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:80"
+      Logging__Console__FormatterName: "simple"
+      Logging__Console__FormatterOptions__UseUtcTimestamp: "true"
+      Logging__Console__FormatterOptions__IncludeScopes: "true"
+      Logging__Console__FormatterOptions__TimestampFormat: "[HH:mm:ss] "
+      Logging__Console__FormatterOptions__JsonWriterOptions__Indented: "true"
+      ConnectionStrings__MySQL: "Server=mysql-medicines;port=3306;DataBase=HealthMedicines;Uid=root;Pwd=password;GuidFormat=Binary16"
+      ConnectionStrings__RabbitMQ: "amqp://root:pherei9Tohpeya6cheelai4mie4shah0teeyii3k@rabbitmq:5672/"
+    ports:
+      - "8081:80"
+    networks:
+      - system
+    restart: always
+    container_name: medicines-api
+
+  person:
+    image: jpcarpanezi/health-system-person:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:80"
+      Logging__Console__FormatterName: "simple"
+      Logging__Console__FormatterOptions__UseUtcTimestamp: "true"
+      Logging__Console__FormatterOptions__IncludeScopes: "true"
+      Logging__Console__FormatterOptions__TimestampFormat: "[HH:mm:ss] "
+      Logging__Console__FormatterOptions__JsonWriterOptions__Indented: "true"
+      ConnectionStrings__MySQL: "Server=mysql-person;port=3306;DataBase=HealthPerson;Uid=root;Pwd=password;GuidFormat=Binary16"
+      ConnectionStrings__RabbitMQ: "amqp://root:pherei9Tohpeya6cheelai4mie4shah0teeyii3k@rabbitmq:5672/"
+    ports:
+      - "8082:80"
+    networks:
+      - system
+    restart: always
+    container_name: person-api
+
+networks:
+  system:
+    external: false

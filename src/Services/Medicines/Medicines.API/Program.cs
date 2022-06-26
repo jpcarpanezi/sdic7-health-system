@@ -1,6 +1,7 @@
 global using Medicines.API.Infrastructure;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using System.ComponentModel.DataAnnotations;
 global using BuildingBlocks.EventBus.Events;
 global using BuildingBlocks.EventBus.Abstractions;
 global using Medicines.API.IntegrationEvents.Events;
