@@ -9,9 +9,6 @@ services:
       RABBITMQ_DEFAULT_USER: "root"
       RABBITMQ_DEFAULT_PASS: "password"
       RABBITMQ_NODENAME: "node@rabbitmq"
-    ports:
-      - "127.0.0.1:5672:5672"
-      - "127.0.0.1:15672:15672"
     volumes:
       - /opt/sdic7-data/rabbitmq/data/:/var/lib/rabbitmq
       - /opt/sdic7-data/rabbitmq/log/:/var/log/rabbitmq
@@ -55,7 +52,7 @@ services:
       ConnectionStrings__MySQL: "Server=mysql-medicines;port=3306;DataBase=HealthMedicines;Uid=root;Pwd=password;GuidFormat=Binary16"
       ConnectionStrings__RabbitMQ: "amqp://root:pherei9Tohpeya6cheelai4mie4shah0teeyii3k@rabbitmq:5672/"
     ports:
-      - "1234:80"
+      - "8081:80"
     networks:
       - system
     restart: always
@@ -74,7 +71,7 @@ services:
       ConnectionStrings__MySQL: "Server=mysql-person;port=3306;DataBase=HealthPerson;Uid=root;Pwd=password;GuidFormat=Binary16"
       ConnectionStrings__RabbitMQ: "amqp://root:pherei9Tohpeya6cheelai4mie4shah0teeyii3k@rabbitmq:5672/"
     ports:
-      - "4321:80"
+      - "8082:80"
     networks:
       - system
     restart: always
