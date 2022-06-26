@@ -1,0 +1,36 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/person/{everything}",
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PATCH", "PUT" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44391
+        }
+      ],
+      "UpstreamPathTemplate": "/medicines/{everything}",
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PATCH", "PUT" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    }
+  ]
+}

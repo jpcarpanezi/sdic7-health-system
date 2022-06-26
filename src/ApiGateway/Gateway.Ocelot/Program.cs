@@ -15,7 +15,7 @@ builder.Services.AddCors(options => {
 	});
 });
 
-IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("ocelot.json").Build();
+IConfiguration configuration = new ConfigurationBuilder().AddJsonFile($"Configurations/ocelot.{builder.Environment.EnvironmentName}.json").Build();
 builder.Services.AddOcelot(configuration).AddCacheManager(settings => settings.WithDictionaryHandle());
 
 var app = builder.Build();
