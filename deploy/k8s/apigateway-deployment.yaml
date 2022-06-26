@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocelot-deployment
+spec:
+  selector:
+    matchLabels:
+      app: person
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: person
+    spec:
+      containers:
+        - name: person-container
+          image: jpcarpanezi/health-system-ocelot:dev
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ocelot-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: person
+  ports:
+    - port: 80
+      targetPort: 80

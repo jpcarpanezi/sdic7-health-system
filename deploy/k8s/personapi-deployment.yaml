@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: person-deployment
+spec:
+  selector:
+    matchLabels:
+      app: person
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: person
+    spec:
+      containers:
+        - name: person-container
+          image: jpcarpanezi/health-system-person:dev
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__MySQLConnectionStrings__MySQL
+              value: Server=mysql;port=3306;DataBase=HealthMedicines;Uid=root;Pwd=password;GuidFormat=Binary16
+            - name: ConnectionStrings__RabbitMQ
+              value: amqp://guest:guest@127.0.0.1:5672/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: person
+spec:
+  type: LoadBalancer
+  selector:
+    app: person
+  ports:
+    - port: 80
+      targetPort: 80

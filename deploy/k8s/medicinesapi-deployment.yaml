@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medicines-deployment
+spec:
+  selector:
+    matchLabels:
+      app: medicines
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: medicines
+    spec:
+      containers:
+        - name: person-container
+          image: jpcarpanezi/health-system-medicines:dev
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__MySQL
+              value: Server=mysql;port=3306;DataBase=HealthMedicines;Uid=root;Pwd=password;GuidFormat=Binary16
+            - name: ConnectionStrings__RabbitMQ
+              value: amqp://guest:guest@rabbitmq-service:5672/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: medicines
+spec:
+  type: LoadBalancer
+  selector:
+    app: medicines
+  ports:
+    - port: 80
+      targetPort: 80
