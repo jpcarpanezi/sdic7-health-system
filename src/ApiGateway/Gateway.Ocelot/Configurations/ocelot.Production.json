@@ -32,5 +32,11 @@
       "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PATCH", "PUT" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Namespace": "propnull",
+      "Type": "KubernetesServiceDiscoveryProvider"
+    }
+  }
 }
