@@ -1,14 +1,17 @@
-﻿using System.Linq.Expressions;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Person.API.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class PersonController : ControllerBase {
 		private readonly PersonContext _context;
+		public readonly IEventBus _eventBus;
+		public readonly ILogger<PersonController> _logger;
 
-		public PersonController(PersonContext context) { 
+		public PersonController(PersonContext context, IEventBus eventBus, ILogger<PersonController> logger) {
 			_context = context;
+			_eventBus = eventBus;
+			_logger = logger;
 		}
 
 		[HttpPost]
@@ -107,6 +110,14 @@ namespace Person.API.Controllers {
 
 			_context.Remove(person);
 			await _context.SaveChangesAsync();
+
+			var eventMsg = new DeletedPersonEvent { PersonUUID = person.UUID };
+
+			try {
+				_eventBus.Publish(eventMsg);
+			} catch (Exception e) {
+				_logger.LogCritical(e, "Failed to publish event {eventName} for user {personUUID}", nameof(DeletedPersonEvent), person.UUID);
+			}
 
 			return NoContent();
 		}
