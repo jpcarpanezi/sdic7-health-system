@@ -5,6 +5,7 @@
 Este repositório trata-se de um trabalho de **Sistemas Distribuídos (SDIC7)** do **Instituto Federal de Ciências e Tecnologia de São Paulo (IFSP) - Campus Piracicaba**. Este grupo composto pelos integrantes desenvolvedores Antonio Naranjo Cerda, Daniel Galdencio dos Santos, Isabelle Caroline de Carvalho Costa, João Pedro Carpanezi dos Santos e Murilo Azevedo Jacon. Este projeto é uma versão alternativa do projeto <a href="https://github.com/jpcarpanezi/dooc-health-system">dooc-health-system</a>, e implementa uma arquitetura descentralizada de microserviços, que compõe um conjunto de APIs RESTful com a proposta de um sistema unificado de saúde para todo o país, permitindo que em qualquer cidade que a pessoa visite um hospital todo seu histórico médico possa ser resgatado.
 
 ## Instalação
+Caso necessário, uma coleção do Postman com todas as requisições para os endpoints das APIs está disponível <a href="https://github.com/jpcarpanezi/sdic7-health-system/blob/master/postman_collection.json">clicando aqui</a>.
 
 ### Utilizando Docker
 **1º)** Clone o repositório
