@@ -1,0 +1,2072 @@
+{
+	"info": {
+		"_postman_id": "6da1de88-1a3b-4d6d-9d56-b42c5bcbddbb",
+		"name": "SDIC7",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16737778"
+	},
+	"item": [
+		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "Person",
+					"item": [
+						{
+							"name": "Insert Person",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"cpf\", globalFunctions.generateCPF());\r",
+											"pm.collectionVariables.set(\"now\", moment().format(\"YYYY-MM-DD\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'cpf', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'birthDate', type: 'string' },\r",
+											"\t\t{ name: 'email', type: 'string' },\r",
+											"\t\t{ name: 'birthCity', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.set(\"temp_person_uuid\", response.uuid);\r",
+											"\tpm.collectionVariables.set(\"temp_person_email\", response.email);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"cpf\");\r",
+											"\tpm.collectionVariables.unset(\"now\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"name\": \"{{$randomFullName}}\",\r\n\t\"cpf\": \"{{cpf}}\",\r\n\t\"phone\": \"(11) 97481-0102\",\r\n\t\"birthDate\": \"{{now}}\",\r\n\t\"email\": \"{{$randomExampleEmail}}\",\r\n\t\"birthCity\": \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/person",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Person",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'cpf', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'birthDate', type: 'string' },\r",
+											"\t\t{ name: 'email', type: 'string' },\r",
+											"\t\t{ name: 'birthCity', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/person/item?method=Email&value={{temp_person_email}}",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person",
+										"item"
+									],
+									"query": [
+										{
+											"key": "method",
+											"value": "Email"
+										},
+										{
+											"key": "value",
+											"value": "{{temp_person_email}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get People",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t\t{ name: 'cpf', type: 'string' },\r",
+											"\t\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t\t{ name: 'birthDate', type: 'string' },\r",
+											"\t\t\t{ name: 'email', type: 'string' },\r",
+											"\t\t\t{ name: 'birthCity', type: 'string' },\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/person/?pageSize=10&pageIndex=0",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person",
+										""
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Person",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"now\", moment().format(\"YYYY-MM-DD\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'cpf', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'birthDate', type: 'string' },\r",
+											"\t\t{ name: 'email', type: 'string' },\r",
+											"\t\t{ name: 'birthCity', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_person_email\", response.email);\r",
+											"\tpm.collectionVariables.unset(\"now\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"uuid\": \"{{temp_person_uuid}}\",\r\n\t\"name\": \"{{$randomFullName}}\",\r\n\t\"phone\": \"(11) 97481-0102\",\r\n\t\"birthDate\": \"{{now}}\",\r\n\t\"email\": \"{{$randomExampleEmail}}\",\r\n\t\"birthCity\": \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/person",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Person",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"temp_person_uuid\");\r",
+											"\tpm.collectionVariables.unset(\"temp_person_email\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/person?method=Email&value={{temp_person_email}}",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person"
+									],
+									"query": [
+										{
+											"key": "method",
+											"value": "Email"
+										},
+										{
+											"key": "value",
+											"value": "{{temp_person_email}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert Person - Duplicate for tests",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"cpf\", globalFunctions.generateCPF());\r",
+											"pm.collectionVariables.set(\"now\", moment().format(\"YYYY-MM-DD\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'cpf', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'birthDate', type: 'string' },\r",
+											"\t\t{ name: 'email', type: 'string' },\r",
+											"\t\t{ name: 'birthCity', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.set(\"temp_person_uuid\", response.uuid);\r",
+											"\tpm.collectionVariables.set(\"temp_person_email\", response.email);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"cpf\");\r",
+											"\tpm.collectionVariables.unset(\"now\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"name\": \"{{$randomFullName}}\",\r\n\t\"cpf\": \"{{cpf}}\",\r\n\t\"phone\": \"(11) 97481-0102\",\r\n\t\"birthDate\": \"{{now}}\",\r\n\t\"email\": \"{{$randomExampleEmail}}\",\r\n\t\"birthCity\": \"{{$randomCity}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/person",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"person"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Address",
+					"item": [
+						{
+							"name": "Insert Address",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'street', type: 'string' },\r",
+											"\t\t{ name: 'complement', type: 'string?' },\r",
+											"\t\t{ name: 'city', type: 'string' },\r",
+											"\t\t{ name: 'state', type: 'string' },\r",
+											"\t\t{ name: 'zipCode', type: 'string' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.set(\"temp_address_uuid\", response.uuid);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"personUUID\": \"{{temp_person_uuid}}\",\r\n\t\"street\": \"{{$randomStreetName}}\",\r\n\t\"complement\": null,\r\n\t\"city\": \"{{$randomCity}}\",\r\n\t\"state\": \"São Paulo\",\r\n\t\"zipCode\": \"17560-057\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/address",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Address",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'street', type: 'string' },\r",
+											"\t\t\t{ name: 'complement', type: 'string?' },\r",
+											"\t\t\t{ name: 'city', type: 'string' },\r",
+											"\t\t\t{ name: 'state', type: 'string' },\r",
+											"\t\t\t{ name: 'zipCode', type: 'string' }\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/address/:uuid/?pageSize=10&pageIndex=0",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"address",
+										":uuid",
+										""
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										}
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_person_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Address",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'street', type: 'string' },\r",
+											"\t\t{ name: 'complement', type: 'string?' },\r",
+											"\t\t{ name: 'city', type: 'string' },\r",
+											"\t\t{ name: 'state', type: 'string' },\r",
+											"\t\t{ name: 'zipCode', type: 'string' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.set(\"temp_address_uuid\", response.uuid);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"uuid\": \"{{temp_address_uuid}}\",\r\n\t\"street\": \"{{$randomStreetName}}\",\r\n\t\"complement\": \"Apartamento 1\",\r\n\t\"city\": \"{{$randomCity}}\",\r\n\t\"state\": \"São Paulo\",\r\n\t\"zipCode\": \"17560-058\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/address",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Address",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"temp_address_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/address/:uuid",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"address",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_address_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Emergency Contact",
+					"item": [
+						{
+							"name": "Insert Emergency Contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'kinship', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.set(\"temp_contact_uuid\", response.uuid);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"personUUID\": \"{{temp_person_uuid}}\",\r\n\t\"name\": \"{{$randomFullName}}\",\r\n\t\"phone\": \"(11) 97481-0102\",\r\n\t\"kinship\": \"Vizinho\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/emergencyContact",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"emergencyContact"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Emergency Contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t\t{ name: 'kinship', type: 'string' },\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/emergencyContact/:uuid/?pageSize=10&pageIndex=0",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"emergencyContact",
+										":uuid",
+										""
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										}
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_person_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Emergency Contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'name', type: 'string' },\r",
+											"\t\t{ name: 'phone', type: 'string' },\r",
+											"\t\t{ name: 'kinship', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"uuid\": \"{{temp_contact_uuid}}\",\r\n\t\"name\": \"{{$randomFullName}}\",\r\n\t\"phone\": \"(11) 97481-0103\",\r\n\t\"kinship\": \"Vizinha\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/emergencyContact",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"emergencyContact"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Emergency Contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"temp_contact_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/emergencyContact/:uuid",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"emergencyContact",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_contact_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Medical Information",
+					"item": [
+						{
+							"name": "Insert Medical Information",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'bloodType', type: 'string' },\r",
+											"\t\t{ name: 'medicalConditions', type: 'string?' },\r",
+											"\t\t{ name: 'allergies', type: 'string?' },\r",
+											"\t\t{ name: 'observations', type: 'string?' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"personUUID\": \"{{temp_person_uuid}}\",\r\n\t\"bloodType\": \"O+\",\r\n\t\"medicalConditions\": null,\r\n\t\"allergies\": null,\r\n\t\"observations\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/medicalInformation",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"medicalInformation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Medical Information",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'bloodType', type: 'string' },\r",
+											"\t\t{ name: 'medicalConditions', type: 'string?' },\r",
+											"\t\t{ name: 'allergies', type: 'string?' },\r",
+											"\t\t{ name: 'observations', type: 'string?' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/medicalInformation/:uuid",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"medicalInformation",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_person_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Medical Information",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'bloodType', type: 'string' },\r",
+											"\t\t{ name: 'medicalConditions', type: 'string?' },\r",
+											"\t\t{ name: 'allergies', type: 'string?' },\r",
+											"\t\t{ name: 'observations', type: 'string?' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"personUUID\": \"{{temp_person_uuid}}\",\r\n\t\"bloodType\": \"O+\",\r\n\t\"medicalConditions\": \"Condição\",\r\n\t\"allergies\": \"Alergia\",\r\n\t\"observations\": \"Obs\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{person_base_url}}/medicalInformation",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"medicalInformation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Medical Information",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{person_base_url}}/medicalInformation/:uuid",
+									"host": [
+										"{{person_base_url}}"
+									],
+									"path": [
+										"medicalInformation",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_person_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Medicines",
+			"item": [
+				{
+					"name": "Medical Consultation",
+					"item": [
+						{
+							"name": "Insert Medical Consultation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"now_datetime\", moment().format(\"YYYY-MM-DDTHH:mm:ss\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'dateTime', type: 'string' },\r",
+											"\t\t{ name: 'reason', type: 'string' },\r",
+											"\t\t{ name: 'diagnose', type: 'string' },\r",
+											"\t\t{ name: 'observations', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_medical_consultation_uuid\", response.uuid);\r",
+											"\tpm.collectionVariables.unset(\"now_datetime\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"PersonUUID\": \"{{temp_person_uuid}}\",\r\n\t\"DateTime\": \"{{now_datetime}}\",\r\n\t\"Reason\": \"{{$randomLoremText}}\",\r\n\t\"Diagnose\": \"{{$randomLoremText}}\",\r\n\t\"Observations\": \"{{$randomLoremText}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Medical Consultation By Param",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'dateTime', type: 'string' },\r",
+											"\t\t{ name: 'reason', type: 'string' },\r",
+											"\t\t{ name: 'diagnose', type: 'string' },\r",
+											"\t\t{ name: 'observations', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation/item/:uuid",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation",
+										"item",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_medical_consultation_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Medical Consultation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t\t{ name: 'dateTime', type: 'string' },\r",
+											"\t\t\t{ name: 'reason', type: 'string' },\r",
+											"\t\t\t{ name: 'diagnose', type: 'string' },\r",
+											"\t\t\t{ name: 'observations', type: 'string' },\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation?pageSize=10&pageIndex=0&personUUID={{temp_person_uuid}}",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										},
+										{
+											"key": "personUUID",
+											"value": "{{temp_person_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Medical Consultation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"now_datetime\", moment().format(\"YYYY-MM-DDTHH:mm:ss\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'dateTime', type: 'string' },\r",
+											"\t\t{ name: 'reason', type: 'string' },\r",
+											"\t\t{ name: 'diagnose', type: 'string' },\r",
+											"\t\t{ name: 'observations', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"now_datetime\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"UUID\": \"{{temp_medical_consultation_uuid}}\",\r\n    \"PersonUUID\": \"{{temp_person_uuid}}\",\r\n    \"DateTime\": \"{{now_datetime}}\",\r\n    \"Reason\": \"{{$randomLoremText}}\",\r\n    \"Diagnose\": \"{{$randomLoremText}}\",\r\n    \"Observations\": \"{{$randomLoremText}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ping",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation/ping",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation",
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert Medical Consultation - Duplicate for tests",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const moment = require(\"moment\")\r",
+											"\r",
+											"pm.collectionVariables.set(\"now_datetime\", moment().format(\"YYYY-MM-DDTHH:mm:ss\"));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'personUUID', type: 'string' },\r",
+											"\t\t{ name: 'dateTime', type: 'string' },\r",
+											"\t\t{ name: 'reason', type: 'string' },\r",
+											"\t\t{ name: 'diagnose', type: 'string' },\r",
+											"\t\t{ name: 'observations', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_medical_consultation_uuid\", response.uuid);\r",
+											"\tpm.collectionVariables.unset(\"now_datetime\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"PersonUUID\": \"{{temp_person_uuid}}\",\r\n\t\"DateTime\": \"{{now_datetime}}\",\r\n\t\"Reason\": \"{{$randomLoremText}}\",\r\n\t\"Diagnose\": \"{{$randomLoremText}}\",\r\n\t\"Observations\": \"{{$randomLoremText}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicalConsultation",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicalConsultation"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Medicine",
+					"item": [
+						{
+							"name": "Insert Medicine",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'drugName', type: 'string' },\r",
+											"\t\t{ name: 'activeIngredient', type: 'string' },\r",
+											"\t\t{ name: 'formRoute', type: 'string' },\r",
+											"\t\t{ name: 'company', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_medicine_uuid\", response.uuid);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"drugName\": \"{{$randomProductName}}\",\r\n\t\"activeIngredient\": \"{{$randomCatchPhrase}}\",\r\n\t\"formRoute\": \"{{$randomJobTitle}}\",\r\n\t\"company\": \"{{$randomCompanyName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicine",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Medicines",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'drugName', type: 'string' },\r",
+											"\t\t\t{ name: 'activeIngredient', type: 'string' },\r",
+											"\t\t\t{ name: 'formRoute', type: 'string' },\r",
+											"\t\t\t{ name: 'company', type: 'string' },\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"drugName\": \"{{$randomProductName}}\",\r\n\t\"activeIngredient\": \"{{$randomCatchPhrase}}\",\r\n\t\"formRoute\": \"{{$randomJobTitle}}\",\r\n\t\"company\": \"{{$randomCompanyName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicine?pageSize=10&pageIndex=0",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicine"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Medicine",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'drugName', type: 'string' },\r",
+											"\t\t{ name: 'activeIngredient', type: 'string' },\r",
+											"\t\t{ name: 'formRoute', type: 'string' },\r",
+											"\t\t{ name: 'company', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"uuid\": \"{{temp_medicine_uuid}}\",\r\n\t\"drugName\": \"{{$randomProductName}}\",\r\n\t\"activeIngredient\": \"{{$randomCatchPhrase}}\",\r\n\t\"formRoute\": \"{{$randomJobTitle}}\",\r\n\t\"company\": \"{{$randomCompanyName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicine",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Medicine",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"temp_medicine_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{medicines_base_url}}/medicine/:uuid",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicine",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_medicine_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert Medicine - Duplicate for tests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'drugName', type: 'string' },\r",
+											"\t\t{ name: 'activeIngredient', type: 'string' },\r",
+											"\t\t{ name: 'formRoute', type: 'string' },\r",
+											"\t\t{ name: 'company', type: 'string' },\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_medicine_uuid\", response.uuid);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"drugName\": \"{{$randomProductName}}\",\r\n\t\"activeIngredient\": \"{{$randomCatchPhrase}}\",\r\n\t\"formRoute\": \"{{$randomJobTitle}}\",\r\n\t\"company\": \"{{$randomCompanyName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/medicine",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"medicine"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Prescription",
+					"item": [
+						{
+							"name": "Insert Prescription",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", () => {\r",
+											"\tpm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'medicalConsultationUUID', type: 'string' },\r",
+											"\t\t{ name: 'medicineUUID', type: 'string' },\r",
+											"\t\t{ name: 'dosage', type: 'string' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tpm.collectionVariables.set(\"temp_prescription_uuid\", response.uuid);\r",
+											"\tpm.collectionVariables.unset(\"temp_medicine_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"medicalConsultationUUID\": \"{{temp_medical_consultation_uuid}}\",\r\n\t\"medicineUUID\": \"{{temp_medicine_uuid}}\",\r\n\t\"dosage\": \"10 gotas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/prescription",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"prescription"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Prescriptions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'pageIndex', type: 'number' },\r",
+											"\t\t{ name: 'pageSize', type: 'number' },\r",
+											"\t\t{ name: 'count', type: 'number' },\r",
+											"\t\t{ name: 'data', type: 'array' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"\r",
+											"\tresponse.data.forEach((item) => {\r",
+											"\t\tconst itemInfo = [\r",
+											"\t\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t\t{ name: 'medicalConsultationUUID', type: 'string' },\r",
+											"\t\t\t{ name: 'medicineUUID', type: 'string' },\r",
+											"\t\t\t{ name: 'dosage', type: 'string' }\r",
+											"\t\t];\r",
+											"\r",
+											"\t\titemInfo.forEach(p => {\r",
+											"\t\t\tglobalFunctions.validateType(item, p.name, p.type);\r",
+											"\t\t});\r",
+											"\t});\r",
+											"\t\r",
+											"\tpm.collectionVariables.unset(\"temp_medical_consultation_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"medicalConsultationUUID\": \"{{temp_medical_consultation_uuid}}\",\r\n\t\"medicineUUID\": \"{{temp_medicine_uuid}}\",\r\n\t\"dosage\": \"10 gotas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/prescription/:uuid?pageSize=10&pageIndex=0",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"prescription",
+										":uuid"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "pageIndex",
+											"value": "0"
+										}
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_medical_consultation_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Prescription",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"\tpm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response data type\", () => {\r",
+											"\tconst response = pm.response.json();\r",
+											"\r",
+											"\tconst info = [\r",
+											"\t\t{ name: 'uuid', type: 'string' },\r",
+											"\t\t{ name: 'medicalConsultationUUID', type: 'string' },\r",
+											"\t\t{ name: 'medicineUUID', type: 'string' },\r",
+											"\t\t{ name: 'dosage', type: 'string' }\r",
+											"\t];\r",
+											"\tinfo.forEach(p => {\r",
+											"\t\tglobalFunctions.validateType(response, p.name, p.type);\r",
+											"\t});\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"uuid\": \"{{temp_prescription_uuid}}\",\r\n\t\"medicalConsultationUUID\": \"{{temp_medical_consultation_uuid}}\",\r\n\t\"medicineUUID\": \"{{temp_medicine_uuid}}\",\r\n\t\"dosage\": \"10 gotas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{medicines_base_url}}/prescription",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"prescription"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Prescription",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", () => {\r",
+											"\tpm.response.to.have.status(204);\r",
+											"\r",
+											"\tpm.collectionVariables.unset(\"temp_medical_consultation_uuid\");\r",
+											"\tpm.collectionVariables.unset(\"temp_medicine_uuid\");\r",
+											"\tpm.collectionVariables.unset(\"temp_prescription_uuid\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{medicines_base_url}}/prescription/:uuid",
+									"host": [
+										"{{medicines_base_url}}"
+									],
+									"path": [
+										"prescription",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "{{temp_prescription_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"globalFunctions = {",
+					"\tvalidateType: function (obj, property, propertyType) {",
+					"\t\tpm.expect(obj).to.have.property(property);",
+					"\t\tif (propertyType.endsWith('?')) {",
+					"\t\t\tif (obj[property] !== null) {",
+					"\t\t\t\tpm.expect(obj[property]).to.be.a(propertyType.replace('?', ''), `Property \"${property}\"`);",
+					"\t\t\t}",
+					"\t\t} else {",
+					"\t\t\tpm.expect(obj[property]).to.be.a(propertyType, `Property \"${property}\"`);",
+					"\t\t}",
+					"\t},",
+					"\tgenerateCPF: function () {",
+					"\t\tconst num1 = aleatorio();",
+					"\t\tconst num2 = aleatorio();",
+					"\t\tconst num3 = aleatorio();",
+					"",
+					"\t\tconst dig1 = dig(num1, num2, num3);",
+					"\t\tconst dig2 = dig(num1, num2, num3, dig1);",
+					"",
+					"\t\treturn `${num1}${num2}${num3}${dig1}${dig2}`;",
+					"",
+					"\t\tfunction dig(n1, n2, n3, n4) {",
+					"",
+					"\t\t\tconst nums = n1.split(\"\").concat(n2.split(\"\"), n3.split(\"\"));",
+					"",
+					"\t\t\tif (n4 !== undefined) {",
+					"\t\t\t\tnums[9] = n4;",
+					"\t\t\t}",
+					"",
+					"\t\t\tlet x = 0;",
+					"",
+					"\t\t\tfor (let i = (n4 !== undefined ? 11 : 10), j = 0; i >= 2; i-- , j++) {",
+					"\t\t\t\tx += parseInt(nums[j]) * i;",
+					"\t\t\t}",
+					"",
+					"\t\t\tconst y = x % 11;",
+					"\t\t\treturn y < 2 ? 0 : 11 - y;",
+					"\t\t}",
+					"",
+					"\t\tfunction aleatorio() {",
+					"\t\t\tconst aleat = Math.floor(Math.random() * 999);",
+					"\t\t\treturn (\"\" + aleat).padStart(3, '0');",
+					"\t\t}",
+					"\t},",
+					"};"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "person_base_url",
+			"value": "https://localhost:8082/person/api",
+			"type": "string"
+		},
+		{
+			"key": "medicines_base_url",
+			"value": "https://localhost:8081/medicines/api",
+			"type": "string"
+		},
+		{
+			"key": "temp_person_uuid",
+			"value": ""
+		},
+		{
+			"key": "temp_person_email",
+			"value": ""
+		}
+	]
+}
