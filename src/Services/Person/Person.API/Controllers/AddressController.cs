@@ -13,6 +13,11 @@ namespace Person.API.Controllers {
 
 		[HttpPost]
 		public async Task<IActionResult> InsertAddress([FromBody] InsertAddress addressInfo) {
+			var person = await _context.People.Where(x => x.UUID == addressInfo.PersonUUID).FirstOrDefaultAsync();
+			if (person is null) {
+				return BadRequest(new MessageView("Pessoa não encontrada."));
+			}
+
 			Address address = new() {
 				UUID = Guid.NewGuid(),
 				PersonUUID = addressInfo.PersonUUID,
@@ -26,18 +31,17 @@ namespace Person.API.Controllers {
 			await _context.AddAsync(address);
 			await _context.SaveChangesAsync();
 
-			return Created(nameof(GetAddress), address);
+			return Created(nameof(GetAddress), new AddressView(address));
 		}
 
 		[HttpGet]
 		[Route("{uuid:guid}")]
 		public async Task<ActionResult<PaginatedItemsViewModel<AddressView>>> GetAddress([FromQuery] PaginatedItemsQuery query, Guid uuid) {
-			var address = (IQueryable<Address>)_context.Addresses;
+			var address = _context.Addresses.Where(x => x.PersonUUID == uuid);
 
 			long totalItems = await address.LongCountAsync();
 
-			var itemsOnPage = await address.Where(x => x.PersonUUID == uuid)
-								.Skip(query.PageSize * query.PageIndex)
+			var itemsOnPage = await address.Skip(query.PageSize * query.PageIndex)
 								.Take(query.PageSize)
 								.OrderBy(x => x.Street)
 								.Select(x => new AddressView(x))

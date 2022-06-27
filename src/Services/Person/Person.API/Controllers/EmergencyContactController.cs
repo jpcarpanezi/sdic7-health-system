@@ -13,29 +13,33 @@ namespace Person.API.Controllers {
 
 		[HttpPost]
 		public async Task<IActionResult> InsertEmergencyContact([FromBody] InsertEmergencyContact emergencyContactInfo) {
-			Person.API.Models.Entities.EmergencyContact emergencyContact  = new() {
+			var person = await _context.People.Where(x => x.UUID == emergencyContactInfo.PersonUUID).FirstOrDefaultAsync();
+			if (person is null) {
+				return BadRequest(new MessageView("Pessoa não encontrada."));
+			}
+
+			Models.Entities.EmergencyContact emergencyContact  = new() {
 				UUID = Guid.NewGuid(),
 				PersonUUID = emergencyContactInfo.PersonUUID,
 				Name = emergencyContactInfo.Name,
-				Phone = emergencyContactInfo?.Phone,
-				Kinship = emergencyContactInfo?.Kinship
+				Phone = emergencyContactInfo.Phone,
+				Kinship = emergencyContactInfo.Kinship
 			};
 
 			await _context.AddAsync(emergencyContact);
 			await _context.SaveChangesAsync();
 
-			return Created(nameof(GetEmergencyContact), emergencyContact);
+			return Created(nameof(GetEmergencyContact), new EmergencyContactView(emergencyContact));
 		}
 
 		[HttpGet]
 		[Route("{uuid:guid}")]
 		public async Task<ActionResult<PaginatedItemsViewModel<EmergencyContactView>>> GetEmergencyContact([FromQuery] PaginatedItemsQuery query, Guid uuid) {
-			var emergencyContact = (IQueryable<Person.API.Models.Entities.EmergencyContact>)_context.EmergencyContacts;
+			var emergencyContact = _context.EmergencyContacts.Where(x => x.PersonUUID == uuid);
 
 			long totalItems = await emergencyContact.LongCountAsync();
 
-			var itemsOnPage = await emergencyContact.Where(x => x.PersonUUID == uuid)
-								.Skip(query.PageSize * query.PageIndex)
+			var itemsOnPage = await emergencyContact.Skip(query.PageSize * query.PageIndex)
 								.Take(query.PageSize)
 								.OrderBy(x => x.Name)
 								.Select(x => new EmergencyContactView(x))

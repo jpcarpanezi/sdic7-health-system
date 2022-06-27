@@ -18,7 +18,7 @@ namespace Medicines.API.Controllers {
 
 		[HttpPost]
 		public async Task<IActionResult> InsertMedicine([FromBody] InsertMedicine medicineInfo) {
-			Models.Entities.Medicine medicine = new() {
+			Medicine medicine = new() {
 				UUID = Guid.NewGuid(),
 				DrugName = medicineInfo.DrugName,
 				ActiveIngredient = medicineInfo.ActiveIngredient,
@@ -29,18 +29,16 @@ namespace Medicines.API.Controllers {
 			await _context.AddAsync(medicine);
 			await _context.SaveChangesAsync();
 
-			return Created(nameof(GetMedicine), medicine);
+			return Created(nameof(GetMedicine), new MedicineView(medicine));
 		}
 
 		[HttpGet]
-		[Route("{uuid:guid}")]
-		public async Task<ActionResult<PaginatedItemsViewModel<MedicineView>>> GetMedicine([FromQuery] PaginatedItemsQuery query, Guid uuid) {
-			var medicine = (IQueryable<Medicine>)_context.Medicines;
+		public async Task<ActionResult<PaginatedItemsViewModel<MedicineView>>> GetMedicine([FromQuery] PaginatedItemsQuery query) {
+			var medicine = _context.Medicines;
 
 			long totalItems = await medicine.LongCountAsync();
 
-			var itemsOnPage = await medicine.Where(x => x.UUID == uuid)
-								.Skip(query.PageSize * query.PageIndex)
+			var itemsOnPage = await medicine.Skip(query.PageSize * query.PageIndex)
 								.Take(query.PageSize)
 								.OrderBy(x => x.DrugName)
 								.Select(x => new MedicineView(x))

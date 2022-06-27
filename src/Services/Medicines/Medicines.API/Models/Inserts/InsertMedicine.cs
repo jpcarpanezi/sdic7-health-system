@@ -3,9 +3,6 @@
 namespace Medicines.API.Models.Inserts {
 	public record InsertMedicine {
 		[Required]
-		public Guid UUID { get; set; }
-
-		[Required]
 		[MaxLength(255)]
 		public string DrugName { get; set; }
 

@@ -1,9 +1,7 @@
 ﻿namespace Medicines.API.Models.Updates {
 	public record UpdateMedicalConsultation {
-		[Required]
 		public Guid UUID { get; set; }
 
-		[Required]
 		public Guid PersonUUID { get; set; }
 
 		[Required]

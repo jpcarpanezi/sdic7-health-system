@@ -1,6 +1,5 @@
 ﻿namespace Person.API.Models.Updates {
 	public record UpdateMedicalInformation {
-		[Required]
 		public Guid PersonUUID { get; set; }
 
 		[Required(AllowEmptyStrings = false)]

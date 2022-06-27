@@ -9,6 +9,7 @@
 		public string Allergies { get; set; }
 
 		public string Observations { get; set; }
+
 		public MedicalInformationView(Entities.MedicalInformation medicalInformation) {
 			PersonUUID = medicalInformation.PersonUUID;
 			BloodType = medicalInformation.BloodType;

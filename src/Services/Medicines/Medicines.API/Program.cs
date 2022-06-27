@@ -5,7 +5,6 @@ global using System.ComponentModel.DataAnnotations;
 global using BuildingBlocks.EventBus.Events;
 global using BuildingBlocks.EventBus.Abstractions;
 global using Medicines.API.IntegrationEvents.Events;
-global using System.ComponentModel.DataAnnotations;
 global using Medicines.API.Models.Inserts;
 global using Medicines.API.Models.Entities;
 global using Medicines.API.Models.Queries;

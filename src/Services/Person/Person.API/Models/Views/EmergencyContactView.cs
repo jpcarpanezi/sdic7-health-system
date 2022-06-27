@@ -14,8 +14,8 @@
 			UUID = emergencyContact.UUID;
 			PersonUUID = emergencyContact.PersonUUID;
 			Name = emergencyContact.Name;
-			Phone = emergencyContact?.Phone;
-			Kinship = emergencyContact?.Kinship;
+			Phone = emergencyContact.Phone;
+			Kinship = emergencyContact.Kinship;
 		}
 	}
 }

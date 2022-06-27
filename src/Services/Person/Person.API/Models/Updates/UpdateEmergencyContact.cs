@@ -1,6 +1,5 @@
 ﻿namespace Person.API.Models.Updates {
 	public record UpdateEmergencyContact {
-		[Required]
 		public Guid UUID { get; set; }
 
 		[Required(AllowEmptyStrings = false)]

@@ -1,6 +1,5 @@
 ﻿namespace Medicines.API.Models.Inserts {
 	public record InsertMedicalConsultation {
-		[Required]
 		public Guid PersonUUID { get; set; }
 
 		[Required]

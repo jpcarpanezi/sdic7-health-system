@@ -2,7 +2,6 @@
 
 namespace Medicines.API.Models.Updates {
 	public class UpdateMedicine {
-		[Required]
 		public Guid UUID { get; set; }
 
 		[Required]

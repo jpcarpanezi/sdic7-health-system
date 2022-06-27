@@ -1,9 +1,5 @@
 ﻿namespace Person.API.Models.Inserts {
 	public record InsertEmergencyContact {
-		[Required]
-		public Guid UUID { get; set; }
-
-		[Required]
 		public Guid PersonUUID { get; set; }
 
 		[Required(AllowEmptyStrings = false)]

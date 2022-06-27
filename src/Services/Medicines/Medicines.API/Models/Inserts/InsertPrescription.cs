@@ -2,9 +2,6 @@
 
 namespace Medicines.API.Models.Inserts {
 	public class InsertPrescription {
-		[Required]
-		public Guid UUID { get; set; }
-
 		public Guid MedicalConsultationUUID { get; set; }
 
 		public Guid MedicineUUID { get; set; }

@@ -19,6 +19,16 @@ namespace Medicines.API.Controllers {
 
 		[HttpPost]
 		public async Task<IActionResult> InsertPrescription([FromBody] InsertPrescription prescriptionInfo) {
+			var medicine = await _context.Medicines.Where(x => x.UUID == prescriptionInfo.MedicineUUID).FirstOrDefaultAsync();
+			if (medicine is null) {
+				return BadRequest(new MessageView("Medicamento não encontrado."));
+			}
+
+			var consultation = await _context.MedicalConsultations.Where(x => x.UUID == prescriptionInfo.MedicalConsultationUUID).FirstOrDefaultAsync();
+			if (consultation is null) {
+				return BadRequest(new MessageView("Consulta não encontrada."));
+			}
+
 			Prescription prescription = new() {
 				UUID = Guid.NewGuid(),
 				MedicalConsultationUUID = prescriptionInfo.MedicalConsultationUUID,
@@ -35,12 +45,11 @@ namespace Medicines.API.Controllers {
 		[HttpGet]
 		[Route("{uuid:guid}")]
 		public async Task<ActionResult<PaginatedItemsViewModel<PrescriptionView>>> GetPrescription([FromQuery] PaginatedItemsQuery query, Guid uuid) {
-			var prescription = (IQueryable<Prescription>)_context.Prescriptions;
+			var prescription = _context.Prescriptions.Where(x => x.MedicalConsultationUUID == uuid);
 
 			long totalItems = await prescription.LongCountAsync();
 
-			var itemsOnPage = await prescription.Where(x => x.UUID == uuid)
-								.Skip(query.PageSize * query.PageIndex)
+			var itemsOnPage = await prescription.Skip(query.PageSize * query.PageIndex)
 								.Take(query.PageSize)
 								.Select(x => new PrescriptionView(x))
 								.ToListAsync();
@@ -54,7 +63,7 @@ namespace Medicines.API.Controllers {
 
 			if (prescription is null) return BadRequest(new MessageView("Prescrição não encontrada."));
 
-			prescription.Dosage = prescription.Dosage;
+			prescription.Dosage = prescriptionInfo.Dosage;
 
 			await _context.SaveChangesAsync();
 			return Ok(new PrescriptionView(prescription));
@@ -65,7 +74,7 @@ namespace Medicines.API.Controllers {
 		public async Task<IActionResult> DeletePrescription(Guid uuid) {
 			var prescription = _context.Prescriptions.Where(s => s.UUID == uuid).FirstOrDefault();
 
-			if (prescription is null) return BadRequest(new MessageView("Prescrição não encontrada"));
+			if (prescription is null) return BadRequest(new MessageView("Prescrição não encontrada."));
 			_context.Remove(prescription);
 			await _context.SaveChangesAsync();
 

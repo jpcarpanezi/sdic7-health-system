@@ -11,9 +11,33 @@ namespace Person.API.Controllers {
 			_context = context;
 		}
 
+		private readonly string[] validBloodTypes = new string[] {
+			"O-",
+			"O+",
+			"A-",
+			"A+",
+			"B-",
+			"B+",
+			"AB-",
+			"AB+"
+		};
+
 		[HttpPost]
 		public async Task<IActionResult> InsertMedicalInformation([FromBody] InsertMedicalInformation medicalInfo) {
-			Person.API.Models.Entities.MedicalInformation medicalInformation = new() {
+			var person = await _context.People.Include(x => x.MedicalInformation).Where(x => x.UUID == medicalInfo.PersonUUID).FirstOrDefaultAsync();
+			if (person is null) {
+				return BadRequest(new MessageView("Pessoa não encontrada."));
+			}
+
+			if (person.MedicalInformation is not null) {
+				return BadRequest(new MessageView("Pessoa já possui informações médicas cadastradas."));
+			}
+
+			if (!validBloodTypes.Contains(medicalInfo.BloodType)) {
+				return BadRequest(new MessageView("Tipo sanguíneo inválido."));
+			}
+
+			Models.Entities.MedicalInformation medicalInformation = new() {
 				PersonUUID = medicalInfo.PersonUUID,
 				BloodType = medicalInfo.BloodType,
 				MedicalConditions = medicalInfo.MedicalConditions,
@@ -21,10 +45,10 @@ namespace Person.API.Controllers {
 				Observations = medicalInfo.Observations
 			};
 
-			await _context.AddAsync(medicalInfo);
+			await _context.AddAsync(medicalInformation);
 			await _context.SaveChangesAsync();
 
-			return Created(nameof(GetMedicalInformation), medicalInfo);
+			return Created(nameof(GetMedicalInformation), new MedicalInformationView(medicalInformation));
 		}
 
 		[HttpGet]
@@ -48,6 +72,10 @@ namespace Person.API.Controllers {
 
 			if (medicalInfo == null) {
 				return BadRequest(new MessageView("Informações médicas não encontradas."));
+			}
+
+			if (!validBloodTypes.Contains(medicalInfo.BloodType)) {
+				return BadRequest(new MessageView("Tipo sanguíneo inválido."));
 			}
 
 			medicalInfo.Observations = medicalInformation.Observations;

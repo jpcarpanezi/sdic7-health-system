@@ -1,6 +1,5 @@
 ﻿namespace Person.API.Models.Inserts {
 	public record InsertAddress {
-		[Required]
 		public Guid PersonUUID { get; set; }
 
 		[Required(AllowEmptyStrings = false)]
